@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YODA Car Collection</title>
+<meta name="description" content="Quality used cars in working condition. Bid online in our verified-bidder auction.">
+<meta name="theme-color" content="#08080a">
+<script>
+  /* theme before first paint: saved choice or ?theme=, else the SA clock (night 18:00-06:00) */
+  (function () {
+    var t = (location.search.match(/theme=(day|night)/) || [])[1] || null;
+    if (!t) try { t = localStorage.getItem("yoda-theme"); } catch (e) {}
+    if (t !== "day" && t !== "night") { var h = +new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Johannesburg", hour: "numeric", hourCycle: "h23" }).format(new Date()); t = h >= 18 || h < 6 ? "night" : "day"; }
+    document.documentElement.dataset.theme = t; document.documentElement.classList.add("loading");
+  })();
+</script>
+<link rel="icon" href="images/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="loader" role="status" aria-label="Loading the showroom">
+  <div class="ld-logo"><img src="images/logo-wide.webp" alt="YODA Car Collection" width="900" height="442"><i class="ld-sweep"></i></div>
+  <div class="ld-bar"><i id="ld-fill"></i></div>
+  <p class="ld-text">Opening the showroom</p>
+</div>
+<header class="top glass">
+  <a href="#" class="brand"><img src="images/logo-nav.webp" alt="YODA Car Collection" width="160" height="79"></a>
+  <nav><a href="#auction">Auction</a><a href="#secure">How it works</a><a href="#sold">Sold</a></nav>
+  <button class="mode" id="mode" aria-label="Switch between day and night mode" aria-pressed="false"><span class="mode-stars"><i style="left:10px;top:7px"></i><i style="left:30px;top:5px"></i><i style="left:46px;top:10px"></i><i style="left:20px;top:13px"></i></span><span class="sky-orb"></span><span class="road"></span><span class="car c-day"></span><span class="car c-night"></span></button>
+<a class="btn small-btn" href="#auction">See the Spark</a>
+</header>
+
+<section class="hero">
+  <canvas id="showroom" aria-hidden="true" data-engine="three.js r160"></canvas>
+  <div class="hero-copy">
+    <h1 class="wordmark">YODA</h1>
+    <p class="eyebrow">Car Collection</p>
+    <p class="hero-sub">Honest cars. Fair bidding. Every car we sell is in working condition, and only verified bidders can bid.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#auction">See the 2011 Spark</a>
+      <a class="btn glass" href="#sold">See sold cars</a>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#auction" aria-label="Scroll to the auction"><span></span></a>
+</section>
+
+<div class="marquee" aria-hidden="true"><div>
+  <span>Working condition</span><span>Verified bidders</span><span>Signed bidder agreement</span><span>No sniping</span><span>Fair prices</span>
+  <span>Working condition</span><span>Verified bidders</span><span>Signed bidder agreement</span><span>No sniping</span><span>Fair prices</span>
+</div></div>
+
+<main>
+<section id="auction" class="wrap">
+  <p class="kicker reveal">01 · Live now</p>
+  <h2 class="mega reveal">Live auction</h2>
+  <div class="lot">
+    <div class="gallery reveal" data-car="sparkBlue"></div>
+    <div class="panel reveal">
+      <span class="tag live"><i></i>On auction now</span>
+      <h3>2011 Chevrolet Spark</h3>
+      <p class="muted">A neat light-blue Spark with roof rails: light on fuel, cheap to maintain and ideal for daily driving. It has 157 000 km on the clock.</p>
+      <p class="fault"><b>Known fault:</b> the valve stem seals need to be replaced. This is the only fault we know of.</p>
+      <dl class="specs">
+        <div><dt>Year</dt><dd>2011</dd></div>
+        <div><dt>Mileage</dt><dd>157 000 km</dd></div>
+        <div><dt>Body</dt><dd>5-door hatch, roof rails</dd></div>
+        <div><dt>Viewing</dt><dd>By appointment</dd></div>
+      </dl>
+      <div class="bidbox glass">
+        <div class="price-row">
+          <div><small id="price-label">Starting bid</small><strong id="price">…</strong></div>
+          <div><small>Ends in</small><strong id="countdown">…</strong></div>
+        </div>
+        <p class="muted" id="reserve"></p>
+        <div id="bid-area"><p class="muted">Loading auction…</p></div>
+        <p class="msg" id="bid-msg" role="status"></p>
+      </div>
+      <details class="history" open>
+        <summary>Bid history</summary>
+        <ol id="history"><li class="muted">No bids yet. Be the first.</li></ol>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="secure" class="wrap">
+  <p class="kicker reveal">02 · Safe bidding</p>
+  <h2 class="mega reveal">Only real bids</h2>
+  <p class="lead reveal">Only people who can actually pay may bid. That protects the seller and every honest bidder.</p>
+  <ol class="steps">
+    <li class="reveal"><b>Create your bidder profile</b>Your name, contact details, SA ID number and a password. One profile per person.</li>
+    <li class="reveal"><b>Sign the bidder agreement</b>You agree that your bids are binding, and you sign on screen with your finger or mouse.</li>
+    <li class="reveal"><b>Upload your ID</b>A photo of the front and the back. Only YODA sees it, and it is used only to check who you are.</li>
+    <li class="reveal"><b>We approve you</b>We check your details and approve your profile. Only approved bidders can bid.</li>
+    <li class="reveal"><b>Bid anonymously</b>Other bidders only see your bidder number, never your name.</li>
+    <li class="reveal"><b>No last-second sniping</b>A bid in the final 2 minutes adds 2 minutes, so everyone gets a fair chance to respond.</li>
+    <li class="reveal"><b>Pay within 48 hours</b>The winner pays by EFT within 48 hours. If not, the sale can be cancelled and the car offered to the next-highest bidder.</li>
+  </ol>
+</section>
+
+<section id="sold" class="hscroll">
+  <div class="sticky">
+    <div class="wrap sold-head">
+      <p class="kicker">03 · Recently sold</p>
+      <h2 class="mega">New owners</h2>
+    </div>
+    <div class="track" id="sold-grid"></div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="images/logo-clear.png" alt="YODA Car Collection" width="600" height="280" loading="lazy">
+      <p>Honest cars. Fair bidding.<br>Verified bidders only.</p>
+    </div>
+    <nav class="foot-col" aria-label="Footer">
+      <h4>Explore</h4>
+      <a href="#auction">Live auction</a><a href="#secure">How bidding works</a><a href="#sold">Recently sold</a><a href="admin.html">Admin</a>
+    </nav>
+    <div class="foot-col">
+      <h4>Buying with us</h4>
+      <p>Viewing by appointment</p><p>Pay by EFT within 48 hours</p><button class="linkish" data-privacy>Privacy (POPIA)</button>
+    </div>
+  </div>
+  <p class="foot-word" aria-hidden="true"><span></span></p>
+  <div class="wrap foot-legal">
+    <p>© <span id="year">2026</span> YODA Car Collection. All cars sold voetstoets unless agreed in writing.</p>
+    <p class="nfc">Website by NFC Software Solutions · <a href="https://wa.me/27627711351">Want one like this?</a></p>
+  </div>
+</footer>
+
+<dialog id="register">
+  <form id="reg-form" novalidate>
+    <p class="kicker small" id="reg-step-label">Step 1 of 3 · Your details</p>
+    <fieldset class="step" data-step="1">
+      <h3>Create your bidder profile</h3>
+      <label>Full name (as on your ID)<input name="name" autocomplete="name" required></label>
+      <label>Email<input name="email" type="email" autocomplete="email" required></label>
+      <label>Cellphone<input name="phone" type="tel" autocomplete="tel" placeholder="082 123 4567" required></label>
+      <label>SA ID number<input name="idNumber" inputmode="numeric" maxlength="13" required></label>
+      <label>Password (at least 8 characters)<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+    </fieldset>
+    <fieldset class="step" data-step="2" hidden>
+      <h3>Bidder agreement</h3>
+      <div class="agreement" id="agreement" data-version="2026-11-25-v1" tabindex="0">
+        <p>By signing, I agree with YODA Car Collection that:</p>
+        <ol>
+          <li>I am 18 or older, and the details and ID I give are true and my own.</li>
+          <li>Every bid I place is a binding offer to buy the car for that amount. I cannot take a bid back once it is placed.</li>
+          <li>If I am the highest bidder when the auction closes (and any reserve is met), I must buy the car. I will pay the full amount by EFT within 48 hours and arrange collection with YODA.</li>
+          <li>I have read the car's description, including any faults listed, and I may view the car by appointment before I bid.</li>
+          <li>If I do not pay in time, YODA may cancel the sale, offer the car to the next-highest bidder, close my bidder profile, and claim the reasonable costs and losses this causes, as the law allows.</li>
+          <li>YODA may refuse a registration, and may suspend a bidder who breaks this agreement.</li>
+          <li>My typed name and the signature I draw below are my electronic signature on this agreement.</li>
+          <li>YODA uses my details and ID only to check who I am and to run the auction, as set out in the privacy notice.</li>
+        </ol>
+      </div>
+      <label>Type your full name to sign<input name="signedName" autocomplete="off" required></label>
+      <div class="sig-wrap"><span class="small muted">Sign here with your finger or mouse</span><canvas id="sig" width="600" height="180" aria-label="Signature box"></canvas><button type="button" class="linkish" id="sig-clear">Clear signature</button></div>
+      <label class="check"><input name="agree" type="checkbox" required> I have read and accept the bidder agreement.</label>
+    </fieldset>
+    <fieldset class="step" data-step="3" hidden>
+      <h3>Photo of your ID</h3>
+      <p class="small muted">Take a clear photo of the front and the back of your ID card or ID book. Only YODA sees it.</p>
+      <div class="id-pics">
+        <label class="id-pic"><input type="file" name="idFront" accept="image/*" capture="environment" required><img alt=""><span>Front of ID</span></label>
+        <label class="id-pic"><input type="file" name="idBack" accept="image/*" capture="environment" required><img alt=""><span>Back of ID</span></label>
+      </div>
+      <p class="small muted">We use your ID only to check who you are. If we don't approve you, we delete the photos. <button type="button" class="linkish" data-privacy>How we handle your details</button></p>
+    </fieldset>
+    <p class="msg" id="reg-msg" role="alert"></p>
+    <div class="row"><button type="button" class="btn glass" id="reg-back">Cancel</button><button class="btn" id="reg-next">Next</button></div>
+  </form>
+</dialog>
+
+<dialog id="login">
+  <form id="login-form" novalidate>
+    <h3>Sign in to bid</h3>
+    <label>Email<input name="email" type="email" autocomplete="email" required></label>
+    <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+    <p class="msg" id="login-msg" role="alert"></p>
+    <div class="row"><button type="button" class="btn glass" id="login-cancel">Cancel</button><button class="btn">Sign in</button></div>
+  </form>
+</dialog>
+
+<dialog id="privacy">
+<h3>Your privacy (POPIA)</h3>
+<p class="muted">YODA Car Collection collects your name, email, cellphone, SA ID number, a photo of your ID and your signed bidder agreement only to check that bidders are real people, to run the auction and to contact the winner.</p>
+<p class="muted">Your details are seen only by YODA, never by other bidders, who see a bidder number instead. We do not sell or share them. If we don't approve your profile, we delete your ID photos. You can ask us to see, correct or delete your details at any time.</p>
+<div class="row"><button class="btn" type="button" id="privacy-close">Got it</button></div>
+</dialog>
+
+<dialog id="viewer"><img id="viewer-img" alt=""><button class="close" aria-label="Close">×</button></dialog>
+
+<canvas id="road" aria-hidden="true"></canvas>
+<script src="demo-api.js"></script>
+<script src="app.js"></script>
+<script src="road.js"></script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

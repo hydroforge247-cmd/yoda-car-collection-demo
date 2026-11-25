@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>YODA Admin</title>
+<link rel="icon" href="images/logo-nav.webp">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { padding: 0 0 60px; }
+  .adm-top { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 5; }
+  .adm-top img { height: 40px; width: auto; }
+  .adm-top h1 { font-size: 18px; margin: 0; flex: 1; }
+  .adm { width: min(1100px, 100% - 32px); margin: 24px auto; }
+  .adm h2 { font-size: 22px; margin: 32px 0 12px; display: flex; align-items: center; gap: 10px; }
+  .count { font-size: 13px; background: var(--red); color: #fff; border-radius: 99px; padding: 2px 10px; }
+  .bidders { display: grid; gap: 12px; }
+  .bidder { border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--glass); }
+  .bidder header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .bidder h3 { margin: 0; font-size: 18px; }
+  .bidder dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 16px; margin: 12px 0; font-size: 14px; }
+  .bidder dt { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  .bidder dd { margin: 0; word-break: break-word; }
+  .files { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .files img { height: 110px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: zoom-in; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .acts input { width: 170px; }
+  .st { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line); }
+  .st.approved { color: var(--ok); } .st.pending-review { color: #ffb648; } .st.rejected, .st.suspended { color: #ff7b86; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .grid2 label { font-size: 14px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .login { width: min(380px, 100% - 32px); margin: 12vh auto; }
+  .login label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .btn.small { padding: 9px 14px; font-size: 14px; }
+</style>
+</head>
+<body>
+<header class="adm-top"><a href="./"><img src="images/logo-nav.webp" alt="YODA Car Collection"></a><h1>Admin</h1><button class="btn glass small" id="out" hidden>Sign out</button></header>
+
+<form class="login" id="login" hidden>
+  <h2>Admin sign in</h2>
+  <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+  <button class="btn wide">Sign in</button>
+  <p class="msg" id="login-msg" role="alert"></p>
+</form>
+
+<main class="adm" id="panel" hidden>
+  <p class="msg" id="msg" role="status"></p>
+  <h2>Waiting for approval <span class="count" id="pending-count">0</span></h2>
+  <div class="bidders" id="pending"></div>
+
+  <h2>Auction</h2>
+  <form id="auction" class="bidder">
+    <p class="muted small" id="auction-state"></p>
+    <div class="grid2">
+      <label>Car<input name="car" required></label>
+      <label>Starting bid (R)<input name="startBid" type="number" min="0" step="100"></label>
+      <label>Bid steps (R)<input name="increment" type="number" min="1" step="50"></label>
+      <label>Reserve (R, 0 = none)<input name="reserve" type="number" min="0" step="100"></label>
+      <label>Ends<input name="endsAt" type="datetime-local"></label>
+    </div>
+    <div class="acts" style="margin-top:12px">
+      <button class="btn small">Save auction</button>
+      <button type="button" class="btn glass small" id="close-now">Close auction now</button>
+      <button type="button" class="btn glass small" id="reopen">Reopen</button>
+      <button type="button" class="btn glass small" id="new-auction">Start a new auction (clears bids)</button>
+    </div>
+  </form>
+
+  <h2>Bids</h2>
+  <div class="bidder"><table><thead><tr><th>Bidder</th><th>Name</th><th>Amount</th><th>Time</th></tr></thead><tbody id="bids"></tbody></table></div>
+
+  <h2>All bidders</h2>
+  <div class="bidders" id="all"></div>
+</main>
+
+<dialog id="viewer"><img id="viewer-img" alt=""><button class="close" aria-label="Close">×</button></dialog>
+<script src="demo-api.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
