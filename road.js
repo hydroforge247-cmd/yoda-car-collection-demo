@@ -152,7 +152,8 @@
   function frame() {
     const d = travel - shown;
     if (Math.abs(d) > 0.002) { shown += calm ? d : d * 0.1; dirty = true; }   // glide to a stop (no glide with reduced motion)
-    if (dirty && !document.hidden) { dirty = false; draw(); }
+    // while the 3D hero still fills most of the screen the road is hidden behind it: don't spend the phone's time drawing it
+    if (dirty && !document.hidden && scrollY > innerHeight * .3) { dirty = false; draw(); }
     requestAnimationFrame(frame);
   }
   size(); requestAnimationFrame(frame);

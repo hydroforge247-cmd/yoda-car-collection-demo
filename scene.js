@@ -38,7 +38,7 @@ function logoGeometry(svg) {
 
 function start(wordGeo, manager) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, phone ? 1.75 : 1.75));   // phones were capped at 1.25: that was the blur
+  renderer.setPixelRatio(Math.min(devicePixelRatio, phone ? 1.5 : 1.75));   // 1.25 looked soft, 1.75 was too heavy to scroll smoothly
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
@@ -114,10 +114,11 @@ function start(wordGeo, manager) {
   scene.add(new THREE.Points(embersGeo, emberMat));
 
   // multisampled render target: the composer otherwise skips antialiasing, which made the edges and photos look jagged
-  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
+  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: phone ? 2 : 4 }));
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .75, .5, .9);
   composer.addPass(bloom);
+  bloom.enabled = !phone;   // phones: the glow pass costs the most and was already turned nearly off; dropping it keeps scrolling smooth
   composer.addPass(new OutputPass());
 
   function theme() {
@@ -142,7 +143,7 @@ function start(wordGeo, manager) {
     dist = Math.max(13, 9.5 / (2 * Math.tan(THREE.MathUtils.degToRad(22.5)) * camera.aspect));
     scene.fog.near = dist - 1; scene.fog.far = dist + 18;
     lift = camera.aspect < 1 ? 3.5 : 0;
-    wordLift = camera.aspect < 1 ? 1.25 : 0;   // portrait: lift YODA clear of the photo ring so no photo covers it
+    wordLift = camera.aspect < 1 ? 2.1 : 0;   // portrait: lift YODA clear of the photo ring so no photo covers it
     // tall phones: a smaller, higher ring so the photos stay clear of "CAR COLLECTION" and the text below
     const tall = camera.aspect < 1 ? Math.min(1, (0.75 - camera.aspect) / 0.3) : 0;
     ring.scale.setScalar(1 - tall * .2); ring.position.y = tall * .9;
