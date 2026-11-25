@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 192">
+<!-- YODA lettering redrawn as clean vectors from the YODA Car Collection logo (NFC Software Solutions, 2026-11-25).
+     Gloss like the logo: brighter upper half, a crisp split, deeper lower half, fine light edge. -->
+<defs>
+  <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#e81a2c"/><stop offset=".46" stop-color="#d0101f"/>
+    <stop offset=".5" stop-color="#ee2232"/><stop offset=".53" stop-color="#a50c1a"/><stop offset="1" stop-color="#6c0812"/>
+  </linearGradient>
+  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ff5a66" stop-opacity=".55"/><stop offset=".5" stop-color="#e3172b" stop-opacity=".3"/><stop offset="1" stop-color="#e3172b" stop-opacity=".1"/>
+  </linearGradient>
+</defs>
+<path id="yoda" fill-rule="evenodd" fill="url(#fill)" stroke="url(#edge)" stroke-width="1.4" shape-rendering="geometricPrecision" stroke-linejoin="round" d="
+M11 9 L95 9 L178 86 L254 9 L332 9 L159 182 L87 182 L140 129 Z
+M402 9 L520 9 Q584 9 576 66 L564 116 Q548 182 482 182 L286 182 Q232 182 252 130 L338 32 Q356 9 402 9 Z
+M404 50 L504 50 Q524 50 518 72 L502 118 Q494 137 474 137 L334 137 Q312 137 326 120 L386 58 Q394 50 404 50 Z
+M572 9 L768 9 Q852 9 846 76 Q840 132 798 160 Q766 182 728 182 L565 182 L603 86 L661 86 L641 138 L732 138 Q760 138 776 116 Q792 92 788 72 Q784 51 760 51 L612 51 Z
+M992 5 L1134 182 L1058 182 L984 80 L878 182 L805 182 Z
+M975 128 L1010 182 L940 182 Z"/>
+</svg>

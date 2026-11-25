@@ -289,12 +289,8 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; }
 [data-theme=day] .steps li::before { -webkit-text-stroke-color: #c8101f; }
 [data-theme=day] .steps b { color: #121216; }
 
-/* Footer wordmark: the real YODA lettering from the logo */
-.foot-word { -webkit-text-stroke: 0; line-height: 0; padding: 48px 16px 0; }
-.foot-word img { width: min(94%, 1100px); height: auto; filter: drop-shadow(0 0 40px rgba(227,23,43,.25)); }
-
-/* Footer v2: always dark, structured, clean. Logo without its black square; the big YODA is the logo's own
-   letter shapes (yoda-mask.png) filled with flat YODA red, no gloss. */
+/* Footer v2: always dark, structured, clean. Logo without its black square; the big YODA is the logo's
+   lettering redrawn as clean vectors (images/yoda-word.svg) with a controlled gloss. */
 .foot { background: #050506; color: #a6a6b0; border-top: 1px solid rgba(255,255,255,.07); position: relative; }
 .foot::before { content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(227,23,43,.8), transparent); }
 .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; padding-top: 72px; padding-bottom: 8px; }
@@ -303,11 +299,8 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; }
 .foot-col h4 { font: 600 12px/1 Barlow, sans-serif; letter-spacing: .24em; text-transform: uppercase; color: #fff; margin: 6px 0 18px; }
 .foot-col a, .foot-col p, .foot-col .linkish { display: block; margin: 0 0 11px; color: #9a9aa5; font-size: 15px; text-decoration: none; text-align: left; }
 .foot-col a:hover, .foot-col .linkish:hover { color: #fff; }
-.foot-word { padding: 40px 16px 0; text-align: center; line-height: 0; }
-.foot-word img { display: none; }
-.foot-word span { display: inline-block; width: min(94%, 1100px); aspect-ratio: 1150 / 186;
-  background: linear-gradient(180deg, #e3172b 0%, #b5101f 100%);
-  -webkit-mask: url(images/yoda-mask.png) center / contain no-repeat; mask: url(images/yoda-mask.png) center / contain no-repeat; }
+.foot-word { -webkit-text-stroke: 0; padding: 40px 16px 0; text-align: center; line-height: 0; }
+.foot-word img { display: block; margin: 0 auto; width: min(94%, 1100px); height: auto; filter: drop-shadow(0 10px 30px rgba(227,23,43,.18)); }
 .foot-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 36px; padding-top: 20px; padding-bottom: 28px;
   border-top: 1px solid rgba(255,255,255,.07); font-size: 13px; color: #6e6e78; }
 .foot-legal p { margin: 0; }
@@ -319,3 +312,50 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; }
   .foot-brand img { width: 180px; }
   .foot-legal { flex-direction: column; }
 }
+
+/* Mobile menu: a clean menu button replaces the header CTA on phones; the links drop down in a glass panel */
+.menu-btn { display: none; width: 44px; height: 40px; border: 0; border-radius: 10px; background: var(--red); cursor: pointer; flex: none; position: relative;
+  box-shadow: 0 8px 24px -10px rgba(227,23,43,.8); }
+.menu-btn span { position: absolute; left: 13px; right: 13px; height: 2px; border-radius: 2px; background: #fff; transition: transform .3s var(--ease), top .3s var(--ease); }
+.menu-btn span:first-child { top: 15px; } .menu-btn span:last-child { top: 23px; }
+.menu-btn[aria-expanded=true] span:first-child { top: 19px; transform: rotate(45deg); }
+.menu-btn[aria-expanded=true] span:last-child { top: 19px; transform: rotate(-45deg); }
+.nav-cta { display: none; }
+@media (max-width: 820px) {
+  .top .small-btn { display: none; }
+  .menu-btn { display: block; }
+  .mode { margin-left: auto; }
+  .top nav#nav { display: flex; flex-direction: column; gap: 2px; position: absolute; top: calc(100% + 8px); left: 0; right: 0; margin: 0; padding: 10px;
+    border-radius: 14px; background: var(--dlg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line);
+    box-shadow: 0 24px 50px -20px rgba(0,0,0,.6); opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .25s, transform .3s var(--ease); }
+  .top nav#nav.open { opacity: 1; transform: none; pointer-events: auto; }
+  .top nav#nav a { padding: 14px 12px; border-radius: 10px; font-size: 17px; color: var(--text); }
+  .top nav#nav a:active { background: var(--glass); }
+  .top nav#nav .nav-cta { display: block; margin-top: 6px; text-align: center; background: var(--red); color: #fff; font-weight: 600; }
+}
+
+/* Hero: "Car Collection" brighter, with the logo's thin red lines either side */
+.eyebrow { color: #ececf1; font-weight: 600; letter-spacing: .42em; font-size: 15px; display: inline-flex; align-items: center; gap: 16px; text-shadow: 0 2px 16px rgba(0,0,0,.8); }
+.eyebrow::before, .eyebrow::after { content: ''; width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--red)); }
+.eyebrow::after { transform: scaleX(-1); }
+[data-theme=day] .eyebrow { color: #17171c; text-shadow: 0 2px 14px rgba(255,255,255,.9); }
+
+/* Sold cars: a clean number badge instead of the outlined numeral */
+.card-no { top: 22px; right: 22px; font: 600 13px/1 Barlow, sans-serif; letter-spacing: .08em; color: #fff; -webkit-text-stroke: 0;
+  padding: 8px 12px; border-radius: 999px; background: rgba(8,8,10,.62); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.card-no span { opacity: .6; margin-right: 4px; }
+[data-theme=day] .card-no { -webkit-text-stroke: 0; }
+
+/* Phones: the seven steps stack over each other as you scroll (each card pins a little lower than the last;
+   the one underneath eases back, set in app.js) */
+@media (max-width: 760px) {
+  .steps { display: block; padding-bottom: 40px; }
+  .steps li { position: sticky; top: calc(88px + var(--i, 0) * 10px); margin-bottom: 18px; min-height: 190px; transform-origin: 50% 0;
+    box-shadow: 0 -10px 30px -12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); }
+  [data-theme=day] .steps li { box-shadow: 0 -10px 30px -16px rgba(0,0,0,.25); }
+}
+
+/* Loader in HD: the full-size logo (cropped to the wordmark area) and a crisp solid bar */
+.ld-logo img { aspect-ratio: 900 / 442; object-fit: cover; object-position: 50% 44%; }
+.ld-bar { height: 3px; border-radius: 3px; background: rgba(255,255,255,.1); }
+.ld-bar i { background: linear-gradient(90deg, #b30f1f, #e3172b); box-shadow: 0 0 10px rgba(227,23,43,.55); border-radius: 3px; }

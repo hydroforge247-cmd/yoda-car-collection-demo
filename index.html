@@ -30,15 +30,16 @@
 </head>
 <body>
 <div id="loader" role="status" aria-label="Loading the showroom">
-  <div class="ld-logo"><img src="images/logo-wide.webp" alt="YODA Car Collection" width="900" height="442"><i class="ld-sweep"></i></div>
+  <div class="ld-logo"><img src="images/logo.jpeg" alt="YODA Car Collection" width="1280" height="853" fetchpriority="high"><i class="ld-sweep"></i></div>
   <div class="ld-bar"><i id="ld-fill"></i></div>
   <p class="ld-text">Opening the showroom</p>
 </div>
 <header class="top glass">
   <a href="#" class="brand"><img src="images/logo-nav.webp" alt="YODA Car Collection" width="160" height="79"></a>
-  <nav><a href="#auction">Auction</a><a href="#secure">How it works</a><a href="#sold">Sold</a></nav>
+  <nav id="nav"><a href="#auction">Live auction</a><a href="#secure">How it works</a><a href="#sold">Sold</a><a href="#auction" class="nav-cta" data-register>Create bidder profile</a></nav>
   <button class="mode" id="mode" aria-label="Switch between day and night mode" aria-pressed="false"><span class="mode-stars"><i style="left:10px;top:7px"></i><i style="left:30px;top:5px"></i><i style="left:46px;top:10px"></i><i style="left:20px;top:13px"></i></span><span class="sky-orb"></span><span class="road"></span><span class="car c-day"></span><span class="car c-night"></span></button>
 <a class="btn small-btn" href="#auction">See the Spark</a>
+<button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
 </header>
 
 <section class="hero">
@@ -135,7 +136,7 @@
       <p>Viewing by appointment</p><p>Pay by EFT within 48 hours</p><button class="linkish" data-privacy>Privacy (POPIA)</button>
     </div>
   </div>
-  <p class="foot-word" aria-hidden="true"><span></span></p>
+  <p class="foot-word" aria-hidden="true"><img src="images/yoda-word.svg" alt="" width="1150" height="192" loading="lazy"></p>
   <div class="wrap foot-legal">
     <p>© <span id="year">2026</span> YODA Car Collection. All cars sold voetstoets unless agreed in writing.</p>
     <p class="nfc">Website by NFC Software Solutions · <a href="https://wa.me/27627711351">Want one like this?</a></p>

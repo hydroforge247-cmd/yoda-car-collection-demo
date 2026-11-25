@@ -80,13 +80,19 @@
     const mk = d => { const t = document.createElement('canvas'); t.width = TW; t.height = TH; t.getContext('2d').putImageData(d, 0, 0); return t; };
     return { day: mk(day), night: mk(night) };
   }
-  const TEX = buildTextures();
+  // Smaller copies of each texture for distant rows (like mipmaps), so the far road doesn't shimmer.
+  function mips(t) {
+    const out = [t];
+    for (let s = TW / 2; s >= 128; s /= 2) { const c2 = document.createElement('canvas'); c2.width = s; c2.height = s; const x = c2.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(out[out.length - 1], 0, 0, s, s); out.push(c2); }
+    return out;
+  }
+  const built = buildTextures(), TEX = { day: mips(built.day), night: mips(built.night) };
 
   // --- camera ----------------------------------------------------------------------------------
   const HOR = .36;
-  let W = 0, H = 0, F = 1, CAM = 2, dirty = true;
+  let W = 0, H = 0, F = 1, CAM = 2, dirty = true, dpr = 1;
   function size() {
-    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
     c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.imageSmoothingEnabled = true;
@@ -104,15 +110,20 @@
 
   const BG = { day: '#f4f3f0', night: '#08080a' };
   function draw() {
-    const mode = root.dataset.theme === 'day' ? 'day' : 'night', tex = TEX[mode], hy = H * HOR, cx = W / 2;
+    const mode = root.dataset.theme === 'day' ? 'day' : 'night', levels = TEX[mode], hy = H * HOR, cx = W / 2;
     g.fillStyle = BG[mode]; g.fillRect(0, 0, W, H);
-    // the road, one screen row at a time
-    for (let y = Math.ceil(hy + 1); y < H; y++) {
-      const z = F * CAM / (y - hy);
+    // the road, one DEVICE pixel row at a time (sharp on phones), picking the texture copy that fits the row's width
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    const D = dpr, HD = Math.round(H * D);
+    for (let yd = Math.ceil((hy + 1) * D); yd < HD; yd++) {
+      const y = yd / D, z = F * CAM / (y - hy);
       if (z > 900) continue;
-      const s = z + shown, v = ((s * PY) % TH + TH) % TH, w = F * 2 * HALF / z;
-      g.drawImage(tex, 0, v | 0, TW, 1, cx - w / 2, y, w, 1.6);
+      const w = F * 2 * HALF / z * D;
+      let L = 0; while (L < levels.length - 1 && levels[L].width > w * 1.5) L++;
+      const t = levels[L], th = t.height, s = z + shown, v = ((s * PY * th / TH) % th + th) % th;
+      g.drawImage(t, 0, v | 0, t.width, 1, cx * D - w / 2, yd, w, 1);
     }
+    g.setTransform(D, 0, 0, D, 0, 0);
     // reflector posts just past the gravel, every 25 m (white on the left, red on the right, as in SA)
     const step = 25, first = step - (((shown % step) + step) % step);
     for (let z = first; z < 160; z += step) {

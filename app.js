@@ -39,7 +39,7 @@ gallery($('#auction .gallery'), ['spark-blue-1', 'spark-blue-2', 'spark-blue-3']
 
 $('#sold-grid').innerHTML = Object.entries(CARS).map(([k, c], i) =>
   `<article class="card glass"><div class="gallery" data-car="${k}"></div><span class="tag sold">Sold</span>
-   <p class="card-no">0${i + 1}</p><h3>${c.title}</h3><p>${c.text}</p></article>`).join('');
+   <p class="card-no"><span>No.</span>${String(i + 1).padStart(2, '0')}</p><h3>${c.title}</h3><p>${c.text}</p></article>`).join('');
 document.querySelectorAll('#sold-grid .gallery').forEach(g => gallery(g, CARS[g.dataset.car].photos, CARS[g.dataset.car].title));
 
 // --- motion ---------------------------------------------------------------------
@@ -54,6 +54,29 @@ const fillMegas = () => megas.forEach(m => {
   m.style.setProperty('--fill', f.toFixed(3));
 });
 addEventListener('scroll', fillMegas, { passive: true }); addEventListener('resize', fillMegas); fillMegas();
+
+// Phones: the step cards stack; the card underneath eases back as the next one slides over it.
+const stepCards = [...document.querySelectorAll('.steps li')];
+stepCards.forEach((li, i) => li.style.setProperty('--i', i));
+const stackSteps = () => {
+  const on = innerWidth <= 760 && !calm;
+  stepCards.forEach((li, i) => {
+    const next = stepCards[i + 1];
+    if (!on || !next) { li.style.scale = ''; li.style.filter = ''; return; }
+    const r = li.getBoundingClientRect(), p = Math.min(1, Math.max(0, (r.bottom - next.getBoundingClientRect().top) / r.height));
+    li.style.scale = (1 - p * .07).toFixed(3); li.style.filter = p > .01 ? `brightness(${(1 - p * .35).toFixed(3)})` : '';
+  });
+};
+addEventListener('scroll', stackSteps, { passive: true }); addEventListener('resize', stackSteps); stackSteps();
+
+// Mobile menu
+const menuBtn = $('#menu-btn'), nav = $('#nav');
+const setMenu = open => { nav.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', open); menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); };
+menuBtn.onclick = () => setMenu(!nav.classList.contains('open'));
+nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+document.addEventListener('click', e => { if (!e.target.closest('.top')) setMenu(false); });
+nav.querySelector('[data-register]').addEventListener('click', e => { if (!me) { e.preventDefault(); openRegister(); } });   // signed in: just go to the auction
 
 // Cards tilt towards the mouse.
 if (!calm && matchMedia('(pointer: fine)').matches) {
