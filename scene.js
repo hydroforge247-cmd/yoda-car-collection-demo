@@ -20,7 +20,7 @@ const ready = () => dispatchEvent(new Event('yoda-ready'));
 const fail = () => { canvas.remove(); ready(); };   // no font or no WebGL: the HTML wordmark shows instead
 
 const THEMES = {
-  night: { bg: 0x08080a, floor: 0x0c0c0f, ember: 0xff4a3a, emberOp: .8, bloom: phone ? .45 : .6, panel: 0xb8b8b8, exposure: 1, key: phone ? 28 : 36 },
+  night: { bg: 0x08080a, floor: 0x0c0c0f, ember: 0xff4a3a, emberOp: .8, bloom: phone ? .28 : .6, panel: 0xb8b8b8, exposure: 1, key: phone ? 28 : 36 },
   day: { bg: 0xeeedea, floor: 0xf7f6f3, ember: 0xc01323, emberOp: .4, bloom: .15, panel: 0xffffff, exposure: 1.05, key: 20 },
 };
 
@@ -50,7 +50,7 @@ function start(wordGeo, manager) {
 
   // 3D wordmark with its light line attached, so the two always move together.
   // Satin chrome rather than mirror gloss: the old clearcoat + bloom gave a big blown-out highlight on phones.
-  const word = new THREE.Mesh(wordGeo, new THREE.MeshPhysicalMaterial({ color: 0xc0121f, metalness: .75, roughness: .3, clearcoat: .45, clearcoatRoughness: .25 }));
+  const word = new THREE.Mesh(wordGeo, new THREE.MeshPhysicalMaterial({ color: 0xd81424, emissive: 0x5a0610, emissiveIntensity: .55, metalness: .7, roughness: .3, clearcoat: .45, clearcoatRoughness: .25 }));
   word.position.y = 2.6;
   scene.add(word);
   // a fine red line that fades out at both ends (like the lines beside "CAR COLLECTION" in the logo)
@@ -76,16 +76,20 @@ function start(wordGeo, manager) {
   const loader = new THREE.TextureLoader(manager);
   const shots = ['corsa-1', 'fortuner-2', 'bantam-canopy-1', 'spark-1', 'corsa-2', 'fortuner-1', 'bantam-1', 'spark-2', 'corsa-3', 'fortuner-4', 'bantam-canopy-3', 'spark-4'];
   const R = 9.2, panelMats = [];
+  // rounded corners for the photos (an alpha mask), so they read as soft cards rather than hard squares
+  const round = (() => { const c = document.createElement('canvas'); c.width = 512; c.height = 384; const x = c.getContext('2d');
+    x.fillStyle = '#000'; x.fillRect(0, 0, 512, 384); x.fillStyle = '#fff'; x.beginPath(); x.roundRect(2, 2, 508, 380, 34); x.fill();
+    const t = new THREE.CanvasTexture(c); t.anisotropy = maxAniso; return t; })();
   shots.forEach((n, i) => {
     const tex = loader.load(`images/${n}.jpeg`); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = maxAniso;   // sharp at an angle
-    const mat = new THREE.MeshBasicMaterial({ map: tex, color: 0xb8b8b8, side: THREE.DoubleSide }); panelMats.push(mat);
+    const mat = new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, transparent: true, color: 0xb8b8b8, side: THREE.DoubleSide }); panelMats.push(mat);
     const panel = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 2.55), mat);
     const a = i / shots.length * Math.PI * 2;
     panel.position.set(Math.sin(a) * R, 1.4, Math.cos(a) * R);
     panel.lookAt(0, 1.4, 0); panel.rotateY(Math.PI);
-    const strip = new THREE.Mesh(new THREE.PlaneGeometry(3.4, .05), new THREE.MeshBasicMaterial({ color: new THREE.Color(RED).multiplyScalar(2.5) }));
+    const strip = new THREE.Mesh(new THREE.PlaneGeometry(2.7, .04), new THREE.MeshBasicMaterial({ color: new THREE.Color(RED).multiplyScalar(2.5) }));
     strip.position.y = -1.33; panel.add(strip);
-    const mirror = new THREE.Mesh(panel.geometry, new THREE.MeshBasicMaterial({ map: tex, color: 0xb8b8b8, transparent: true, opacity: .14, side: THREE.DoubleSide }));
+    const mirror = new THREE.Mesh(panel.geometry, new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, color: 0xb8b8b8, transparent: true, opacity: .14, side: THREE.DoubleSide }));
     mirror.position.copy(panel.position); mirror.position.y = -1.4;
     mirror.quaternion.copy(panel.quaternion); mirror.scale.y = -1;
     ring.add(panel, mirror);
@@ -138,6 +142,9 @@ function start(wordGeo, manager) {
     scene.fog.near = dist - 1; scene.fog.far = dist + 18;
     lift = camera.aspect < 1 ? 3.5 : 0;
     wordLift = camera.aspect < 1 ? 1.25 : 0;   // portrait: lift YODA clear of the photo ring so no photo covers it
+    // tall phones: a smaller, higher ring so the photos stay clear of "CAR COLLECTION" and the text below
+    const tall = camera.aspect < 1 ? Math.min(1, (0.75 - camera.aspect) / 0.3) : 0;
+    ring.scale.setScalar(1 - tall * .2); ring.position.y = tall * .9;
   }
   addEventListener('resize', size); size();
 

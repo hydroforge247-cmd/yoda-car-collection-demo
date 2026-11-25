@@ -359,3 +359,4 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; }
 .ld-logo img { aspect-ratio: 900 / 442; object-fit: cover; object-position: 50% 44%; }
 .ld-bar { height: 3px; border-radius: 3px; background: rgba(255,255,255,.1); }
 .ld-bar i { background: linear-gradient(90deg, #b30f1f, #e3172b); box-shadow: 0 0 10px rgba(227,23,43,.55); border-radius: 3px; }
+@media (max-width: 820px) { .top nav + .mode { margin-left: auto; } }   /* phones: switch + menu sit at the right edge */
