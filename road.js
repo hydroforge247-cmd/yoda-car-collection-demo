@@ -10,10 +10,10 @@
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // --- world (metres) and texture --------------------------------------------------------------
-  const HALF = 22;                      // texture covers 22 m either side of the centre line
+  const HALF = 18;                      // texture covers 18 m either side of the centre line
   const LANE = 3.7, EDGE = LANE, SHOULDER = EDGE + 2.2, GRAVEL = SHOULDER + 2.8;   // one lane each way
-  const LEN = 48;                       // texture repeats every 48 m (4 dash periods)
-  const TW = 1024, TH = 1024, PX = TW / (2 * HALF), PY = TH / LEN;
+  const LEN = 24;                       // texture repeats every 24 m (2 dash periods)
+  const TW = 1536, TH = 1024, PX = TW / (2 * HALF), PY = TH / LEN;   // ~43 texels per metre both ways (was ~22): sharper up close
   const xOf = i => (i + .5) / PX - HALF;                       // texture column -> metres from centre
   const yOf = j => (j + .5) / PY;                              // texture row -> metres along the road
 
@@ -38,8 +38,8 @@
   function buildTextures() {
     const day = new ImageData(TW, TH), night = new ImageData(TW, TH);
     // a few repairs and cracks, kept away from the seam so the texture tiles
-    const patches = [[-5.6, 9, 2.4, 5], [2.2, 30, 3, 3.2], [-1.9, 40, 1.6, 2.2]];
-    const cracks = []; for (let k = 0; k < 7; k++) { let x = (rnd() - .5) * 2 * EDGE * .9, y = 3 + rnd() * 40; const pts = [[x, y]]; for (let s = 0; s < 14; s++) { x += (rnd() - .5) * .35; y += .18 + rnd() * .15; pts.push([x, y]); } cracks.push(pts); }
+    const patches = [[-1.9, 4, 1.8, 2.6], [2.0, 13, 2.6, 3]];
+    const cracks = []; for (let k = 0; k < 4; k++) { let x = (rnd() - .5) * 2 * EDGE * .9, y = 2 + rnd() * 16; const pts = [[x, y]]; for (let s = 0; s < 14; s++) { x += (rnd() - .5) * .35; y += .18 + rnd() * .15; pts.push([x, y]); } cracks.push(pts); }
     const crackMask = new Uint8Array(TW * TH);
     for (const pts of cracks) for (let s = 1; s < pts.length; s++) {
       const [x0, y0] = pts[s - 1], [x1, y1] = pts[s];
@@ -82,7 +82,7 @@
   // Smaller copies of each texture for distant rows (like mipmaps), so the far road doesn't shimmer.
   function mips(t) {
     const out = [t];
-    for (let s = TW / 2; s >= 128; s /= 2) { const c2 = document.createElement('canvas'); c2.width = s; c2.height = s; const x = c2.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(out[out.length - 1], 0, 0, s, s); out.push(c2); }
+    for (let s = TW / 2; s >= 128; s /= 2) { const h = Math.round(s * TH / TW), c2 = document.createElement('canvas'); c2.width = s; c2.height = h; const x = c2.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(out[out.length - 1], 0, 0, s, h); out.push(c2); }
     return out;
   }
   const built = buildTextures(), TEX = { day: mips(built.day), night: mips(built.night) };
