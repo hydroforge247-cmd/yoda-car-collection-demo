@@ -82,14 +82,15 @@ function start(wordGeo, manager) {
     const t = new THREE.CanvasTexture(c); t.anisotropy = maxAniso; return t; })();
   shots.forEach((n, i) => {
     const tex = loader.load(`images/${n}.jpeg`); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = maxAniso;   // sharp at an angle
-    const mat = new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, transparent: true, color: 0xb8b8b8, side: THREE.DoubleSide }); panelMats.push(mat);
+    // opaque cut-out corners (alpha-to-coverage, smoothed by the multisampling): no transparency sorting, so no flicker as the ring turns
+    const mat = new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, alphaTest: .5, alphaToCoverage: true, color: 0xb8b8b8, side: THREE.DoubleSide }); panelMats.push(mat);
     const panel = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 2.55), mat);
     const a = i / shots.length * Math.PI * 2;
     panel.position.set(Math.sin(a) * R, 1.4, Math.cos(a) * R);
     panel.lookAt(0, 1.4, 0); panel.rotateY(Math.PI);
     const strip = new THREE.Mesh(new THREE.PlaneGeometry(2.7, .04), new THREE.MeshBasicMaterial({ color: new THREE.Color(RED).multiplyScalar(2.5) }));
     strip.position.y = -1.33; panel.add(strip);
-    const mirror = new THREE.Mesh(panel.geometry, new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, color: 0xb8b8b8, transparent: true, opacity: .14, side: THREE.DoubleSide }));
+    const mirror = new THREE.Mesh(panel.geometry, new THREE.MeshBasicMaterial({ map: tex, alphaMap: round, color: 0xb8b8b8, transparent: true, opacity: .14, depthWrite: false, side: THREE.DoubleSide }));
     mirror.position.copy(panel.position); mirror.position.y = -1.4;
     mirror.quaternion.copy(panel.quaternion); mirror.scale.y = -1;
     ring.add(panel, mirror);

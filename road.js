@@ -1,8 +1,8 @@
-/* YODA: the page sits on an open South African road, seen from the driver's seat.
+﻿/* YODA: the page sits on an open South African road, seen from the driver's seat.
    A tar texture (aggregate grain, tyre-polished tracks, cracks, patch repairs, worn paint, tarred shoulders,
    gravel verge and dry veld) is painted once, then drawn row by row in true perspective ("mode 7").
    Scrolling drives forward and glides to a stop; scrolling up reverses. Night: headlights light the road ahead.
-   Four lanes: broken white lane lines, solid white centre lines, yellow edge lines. */
+   One lane each way: broken white centre line, yellow edge lines. */
 (() => {
   const c = document.getElementById('road');
   if (!c) return;
@@ -11,7 +11,7 @@
 
   // --- world (metres) and texture --------------------------------------------------------------
   const HALF = 22;                      // texture covers 22 m either side of the centre line
-  const LANE = 3.7, EDGE = 2 * LANE, SHOULDER = EDGE + 2.2, GRAVEL = SHOULDER + 2.8;
+  const LANE = 3.7, EDGE = LANE, SHOULDER = EDGE + 2.2, GRAVEL = SHOULDER + 2.8;   // one lane each way
   const LEN = 48;                       // texture repeats every 48 m (4 dash periods)
   const TW = 1024, TH = 1024, PX = TW / (2 * HALF), PY = TH / LEN;
   const xOf = i => (i + .5) / PX - HALF;                       // texture column -> metres from centre
@@ -31,8 +31,7 @@
     const ax = Math.abs(x), dashOn = (y % 12) < 3, wear = vnoise(G2, x * 3, y * 1.4);
     let p = 0;
     if (Math.abs(ax - (EDGE - .25)) < .07) p = 2;                                        // yellow edge lines
-    else if (ax < .2 && Math.abs(ax - .12) < .055) p = 1;                                 // double solid centre
-    else if (Math.abs(ax - LANE) < .065 && dashOn) p = 1;                                 // broken lane lines
+    else if (ax < .065 && dashOn) p = 1;                                                  // broken white centre line
     return p && wear > .18 ? p : 0;
   }
 
